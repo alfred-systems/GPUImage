@@ -1,5 +1,6 @@
 import UIKit
 import GPUImage
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -9,11 +10,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        videoCamera = GPUImageVideoCamera(sessionPreset: AVCaptureSessionPreset640x480, cameraPosition: .Back)
-        videoCamera!.outputImageOrientation = .Portrait;
+        videoCamera = GPUImageVideoCamera(sessionPreset: AVCaptureSession.Preset.vga640x480.rawValue, cameraPosition: .back)
+        videoCamera!.outputImageOrientation = .portrait;
         filter = GPUImagePixellateFilter()
         videoCamera?.addTarget(filter)
         filter?.addTarget(self.view as! GPUImageView)
-        videoCamera?.startCameraCapture()
+        videoCamera?.startCapture()
     }
 }
