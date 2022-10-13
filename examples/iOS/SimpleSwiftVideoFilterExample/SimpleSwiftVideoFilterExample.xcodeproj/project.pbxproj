@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD79614128F87D9500959FF3 /* MLGPUImageCropFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD79614028F87D9500959FF3 /* MLGPUImageCropFilter.swift */; };
+		AD79614328F87DD600959FF3 /* testShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = AD79614228F87DD600959FF3 /* testShader.metal */; };
 		BC73FD2419612C19004A9191 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC73FD2319612C19004A9191 /* AppDelegate.swift */; };
 		BC73FD2619612C19004A9191 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC73FD2519612C19004A9191 /* ViewController.swift */; };
 		BC73FD2919612C19004A9191 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC73FD2719612C19004A9191 /* Main.storyboard */; };
@@ -53,6 +55,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AD79614028F87D9500959FF3 /* MLGPUImageCropFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLGPUImageCropFilter.swift; sourceTree = "<group>"; };
+		AD79614228F87DD600959FF3 /* testShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = testShader.metal; sourceTree = "<group>"; };
 		BC73FD1E19612C19004A9191 /* SimpleSwiftVideoFilterExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleSwiftVideoFilterExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC73FD2219612C19004A9191 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC73FD2319612C19004A9191 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +78,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AD79613F28F87D7600959FF3 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				AD79614028F87D9500959FF3 /* MLGPUImageCropFilter.swift */,
+				AD79614228F87DD600959FF3 /* testShader.metal */,
+			);
+			path = Filters;
+			sourceTree = "<group>";
+		};
 		BC73FD1519612C19004A9191 = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +107,7 @@
 		BC73FD2019612C19004A9191 /* SimpleSwiftVideoFilterExample */ = {
 			isa = PBXGroup;
 			children = (
+				AD79613F28F87D7600959FF3 /* Filters */,
 				BC73FD2319612C19004A9191 /* AppDelegate.swift */,
 				BC73FD2519612C19004A9191 /* ViewController.swift */,
 				BC73FD2719612C19004A9191 /* Main.storyboard */,
@@ -219,6 +233,8 @@
 			files = (
 				BC73FD2619612C19004A9191 /* ViewController.swift in Sources */,
 				BC73FD2419612C19004A9191 /* AppDelegate.swift in Sources */,
+				AD79614128F87D9500959FF3 /* MLGPUImageCropFilter.swift in Sources */,
+				AD79614328F87DD600959FF3 /* testShader.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

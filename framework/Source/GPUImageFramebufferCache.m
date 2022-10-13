@@ -134,7 +134,8 @@
     defaultTextureOptions.internalFormat = GL_RGBA;
     defaultTextureOptions.format = GL_BGRA;
     defaultTextureOptions.type = GL_UNSIGNED_BYTE;
-    
+    defaultTextureOptions.mtlFormat = MTLPixelFormatRGBA8Unorm;
+
     return [self fetchFramebufferForSize:framebufferSize textureOptions:defaultTextureOptions onlyTexture:onlyTexture];
 }
 

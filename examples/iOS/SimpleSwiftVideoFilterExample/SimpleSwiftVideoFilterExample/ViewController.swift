@@ -6,6 +6,7 @@ class ViewController: UIViewController {
     
     var videoCamera:GPUImageVideoCamera?
     var filter:GPUImagePixellateFilter?
+    var metalFilter: MLGPUImageCropFilter?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -13,8 +14,10 @@ class ViewController: UIViewController {
         videoCamera = GPUImageVideoCamera(sessionPreset: AVCaptureSession.Preset.vga640x480.rawValue, cameraPosition: .back)
         videoCamera!.outputImageOrientation = .portrait;
         filter = GPUImagePixellateFilter()
-        videoCamera?.addTarget(filter)
-        filter?.addTarget(self.view as! GPUImageView)
+        metalFilter = MLGPUImageCropFilter()
+        metalFilter?.doinit()
+        videoCamera?.addTarget(metalFilter)
+        metalFilter?.addTarget(self.view as! GPUImageView)
         videoCamera?.startCapture()
     }
 }

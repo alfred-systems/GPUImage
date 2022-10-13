@@ -21,6 +21,7 @@ typedef struct GPUTextureOptions {
     GLenum internalFormat;
     GLenum format;
     GLenum type;
+    MTLPixelFormat mtlFormat;
 } GPUTextureOptions;
 
 @interface GPUImageFramebuffer : NSObject
@@ -28,6 +29,7 @@ typedef struct GPUTextureOptions {
 @property(readonly) CGSize size;
 @property(readonly) GPUTextureOptions textureOptions;
 @property(readonly) GLuint texture;
+@property (readonly, nonatomic) id<MTLTexture> metalTexture;
 @property(readonly) BOOL missingFramebuffer;
 
 // Initialization and teardown

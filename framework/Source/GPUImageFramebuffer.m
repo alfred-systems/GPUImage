@@ -8,6 +8,7 @@
     CVPixelBufferRef renderTarget;
     CVOpenGLESTextureRef renderTexture;
     NSUInteger readLockCount;
+    CVMetalTextureRef MLRenderTexture;
 #else
 #endif
     NSUInteger framebufferReferenceCount;
@@ -76,6 +77,7 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size);
     defaultTextureOptions.internalFormat = GL_RGBA;
     defaultTextureOptions.format = GL_BGRA;
     defaultTextureOptions.type = GL_UNSIGNED_BYTE;
+    defaultTextureOptions.mtlFormat = MTLPixelFormatRGBA8Unorm;
 
     _textureOptions = defaultTextureOptions;
     _size = framebufferSize;
@@ -97,6 +99,7 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size);
     defaultTextureOptions.internalFormat = GL_RGBA;
     defaultTextureOptions.format = GL_BGRA;
     defaultTextureOptions.type = GL_UNSIGNED_BYTE;
+    defaultTextureOptions.mtlFormat = MTLPixelFormatRGBA8Unorm;
 
     if (!(self = [self initWithSize:framebufferSize textureOptions:defaultTextureOptions onlyTexture:NO]))
     {
@@ -141,6 +144,8 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size);
         {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
             CVOpenGLESTextureCacheRef coreVideoTextureCache = [[GPUImageContext sharedImageProcessingContext] coreVideoTextureCache];
+            CVMetalTextureCacheRef coreMLVideoTextureCache = [[GPUImageContext sharedImageProcessingContext] coreMLVideoTextureCache];
+
             // Code originally sourced from http://allmybrain.com/2011/12/08/rendering-to-a-texture-with-ios-5-texture-cache-api/
             
             CFDictionaryRef empty; // empty value for attr value.
@@ -148,7 +153,9 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size);
             empty = CFDictionaryCreate(kCFAllocatorDefault, NULL, NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks); // our empty IOSurface properties dictionary
             attrs = CFDictionaryCreateMutable(kCFAllocatorDefault, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
             CFDictionarySetValue(attrs, kCVPixelBufferIOSurfacePropertiesKey, empty);
-            
+            CFDictionarySetValue(attrs, kCVPixelBufferOpenGLCompatibilityKey, (__bridge const void *)(@YES)); //that support InteropTexture
+            CFDictionarySetValue(attrs, kCVPixelBufferMetalCompatibilityKey, (__bridge const void *)(@YES)); //that support InteropTexture
+
             CVReturn err = CVPixelBufferCreate(kCFAllocatorDefault, (int)_size.width, (int)_size.height, kCVPixelFormatType_32BGRA, attrs, &renderTarget);
             if (err)
             {
@@ -170,7 +177,23 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size);
             {
                 NSAssert(NO, @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err);
             }
-            
+
+            err = CVMetalTextureCacheCreateTextureFromImage (kCFAllocatorDefault,
+                                                             coreMLVideoTextureCache,
+                                                             renderTarget,
+                                                             NULL, // texture attributes
+                                                             _textureOptions.mtlFormat, // mtl format
+                                                             (int)_size.width,(int)_size.height,
+                                                             0,
+                                                             &MLRenderTexture);
+            if (err)
+            {
+                NSAssert(NO, @"Error at CVMetalTextureCacheCreateTextureFromImage %d", err);
+            }
+
+            _metalTexture = CVMetalTextureGetTexture(MLRenderTexture);
+            NSAssert(_metalTexture, @"Failed to create Metal texture CoreVideo Metal Texture");
+
             CFRelease(attrs);
             CFRelease(empty);
             
@@ -227,6 +250,13 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size);
                 CFRelease(renderTexture);
                 renderTexture = NULL;
             }
+
+            if (MLRenderTexture)
+            {
+                CFRelease(MLRenderTexture);
+                MLRenderTexture = NULL;
+            }
+
 #endif
         }
         else

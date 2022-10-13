@@ -22,6 +22,9 @@ typedef NS_ENUM(NSUInteger, GPUImageRotationMode) {
 @property(readonly, retain, nonatomic) EAGLContext *context;
 @property(readonly) CVOpenGLESTextureCacheRef coreVideoTextureCache;
 @property(readonly) GPUImageFramebufferCache *framebufferCache;
+// Metal
+@property(readonly) CVMetalTextureCacheRef coreMLVideoTextureCache;
+@property(readonly) id<MTLDevice> metalDevice;
 
 + (void *)contextKey;
 + (GPUImageContext *)sharedImageProcessingContext;

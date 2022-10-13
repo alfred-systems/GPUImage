@@ -4,6 +4,7 @@
 
 #define MAXSHADERPROGRAMSALLOWEDINCACHE 40
 
+@import Metal;
 extern dispatch_queue_attr_t GPUImageDefaultQueueAttribute(void);
 
 @interface GPUImageContext()
@@ -21,7 +22,9 @@ extern dispatch_queue_attr_t GPUImageDefaultQueueAttribute(void);
 @synthesize currentShaderProgram = _currentShaderProgram;
 @synthesize contextQueue = _contextQueue;
 @synthesize coreVideoTextureCache = _coreVideoTextureCache;
+@synthesize coreMLVideoTextureCache = _coreMLVideoTextureCache;
 @synthesize framebufferCache = _framebufferCache;
+@synthesize metalDevice = _metalDevice;
 
 static void *openGLESContextQueueKey;
 
@@ -40,7 +43,8 @@ static void *openGLESContextQueueKey;
 #endif
     shaderProgramCache = [[NSMutableDictionary alloc] init];
     shaderProgramUsageHistory = [[NSMutableArray alloc] init];
-    
+    _metalDevice = MTLCreateSystemDefaultDevice();
+
     return self;
 }
 
@@ -306,6 +310,32 @@ static void *openGLESContextQueueKey;
     
     return _coreVideoTextureCache;
 }
+
+- (CVMetalTextureCacheRef)coreMLVideoTextureCache;
+{
+    if (_coreMLVideoTextureCache == NULL)
+    {
+        CVReturn err;
+        // 1. Create a Metal Core Video texture cache from the pixel buffer.
+        err = CVMetalTextureCacheCreate(
+                        kCFAllocatorDefault,
+                        nil,
+                        _metalDevice,
+                        nil,
+                        &_coreMLVideoTextureCache);
+
+        NSAssert(err == kCVReturnSuccess, @"Failed to create Metal texture cache");
+        if (err)
+        {
+            NSAssert(NO, @"Error at CVOpenGLESTextureCacheCreate %d", err);
+        }
+
+    }
+
+    return _coreMLVideoTextureCache;
+}
+
+
 
 - (GPUImageFramebufferCache *)framebufferCache;
 {

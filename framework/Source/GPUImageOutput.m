@@ -161,6 +161,7 @@ void reportAvailableMemoryForGPUImage(NSString *tag)
     _outputTextureOptions.internalFormat = GL_RGBA;
     _outputTextureOptions.format = GL_BGRA;
     _outputTextureOptions.type = GL_UNSIGNED_BYTE;
+    _outputTextureOptions.mtlFormat = MTLPixelFormatRGBA8Unorm;
 
     return self;
 }
